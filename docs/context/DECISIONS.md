@@ -1,5 +1,13 @@
 # Architectural & Product Decisions
 
+## 2026-02-03 — CI uses Corepack for pnpm provisioning
+
+**Reason:** GitHub Actions jobs were failing with `Unable to locate executable file: pnpm`. Relying on Corepack keeps pnpm aligned with `packageManager` and avoids PATH issues in CI.
+
+**Exact changes:**
+- Replaced `pnpm/action-setup@v4` with `corepack enable` + `corepack prepare pnpm@9.0.0 --activate`.
+- Added `cache-dependency-path: pnpm-lock.yaml` to Node setup for consistent pnpm cache restores.
+
 ## 2026-02-03 — Clerk (auth) + Supabase (DB); single user ID
 
 **Clerk** is the only identity provider. **Supabase** is the database (Postgres). They are separate; there is no Supabase Auth.
