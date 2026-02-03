@@ -84,8 +84,9 @@ README.md
 ## Security Rules
 
 - No secrets in mobile app
-- Clerk JWT verified server-side
-- Supabase accessed only via API
+- Clerk JWT verified server-side (Clerk = auth only)
+- Supabase accessed only via API (Supabase = DB only; no Supabase Auth)
+- User ID: Clerk user ID (JWT `sub`) = `user_id` in DB; no mapping table (see DECISIONS.md and SUPABASE-CLERK.md)
 
 ---
 

@@ -1,3 +1,4 @@
+-- user_id = Clerk user ID (JWT sub). RLS uses auth.uid()::text for JWT-based access; API uses withRls(userId) to scope by Clerk ID.
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS "cards" (
@@ -37,11 +38,11 @@ ALTER TABLE "plans" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can only access their own cards"
   ON "cards"
   FOR ALL
-  USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING (user_id = auth.uid()::text)
+  WITH CHECK (user_id = auth.uid()::text);
 
 CREATE POLICY "Users can only access their own plans"
   ON "plans"
   FOR ALL
-  USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING (user_id = auth.uid()::text)
+  WITH CHECK (user_id = auth.uid()::text);
