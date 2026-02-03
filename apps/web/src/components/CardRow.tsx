@@ -1,17 +1,26 @@
-import { CreditCard } from '../types/card';
-import { UtilizationBar } from './UtilizationBar';
-import { PaymentRecommendation } from './PaymentRecommendation';
-import { CheckCircle2 } from 'lucide-react';
+import { CreditCard } from "../types/card";
+import { UtilizationBar } from "./UtilizationBar";
+import { PaymentRecommendation } from "./PaymentRecommendation";
+import { CheckCircle2 } from "lucide-react";
 
 interface CardRowProps {
   card: CreditCard;
   onClick?: () => void;
   showElimination?: boolean;
+  onMarkPaid?: (amount: number) => void;
 }
 
-export function CardRow({ card, onClick, showElimination = false }: CardRowProps) {
+export function CardRow({
+  card,
+  onClick,
+  showElimination = false,
+  onMarkPaid,
+}: CardRowProps) {
   // Mock calculation for elimination - in real app this would be based on actual plan
-  const remainingToPayoff = card.balance - (card.paymentBeforeStatement?.amount || 0) - card.paymentByDueDate.amount;
+  const remainingToPayoff =
+    card.balance -
+    (card.paymentBeforeStatement?.amount || 0) -
+    card.paymentByDueDate.amount;
   const canEliminate = remainingToPayoff > 0 && remainingToPayoff < 500;
   const willEliminate = remainingToPayoff <= 0;
 
@@ -23,8 +32,12 @@ export function CardRow({ card, onClick, showElimination = false }: CardRowProps
       <div className="mb-4">
         <div className="flex items-start justify-between mb-1">
           <div>
-            <h3 className="font-medium text-[#1C1C1C] dark:text-[#E4E4E4]">{card.name}</h3>
-            <p className="text-sm text-[#6B6B6B] dark:text-[#9B9B9B]">{card.issuer}</p>
+            <h3 className="font-medium text-[#1C1C1C] dark:text-[#E4E4E4]">
+              {card.name}
+            </h3>
+            <p className="text-sm text-[#6B6B6B] dark:text-[#9B9B9B]">
+              {card.issuer}
+            </p>
           </div>
           {Object.keys(card.editedFields).length > 0 && (
             <span className="text-xs text-[#6B6B6B] dark:text-[#9B9B9B] bg-[#E4E4E4] dark:bg-[#3F3F3F] px-2 py-1 rounded">
@@ -40,7 +53,10 @@ export function CardRow({ card, onClick, showElimination = false }: CardRowProps
       </div>
 
       <div className="mb-4">
-        <UtilizationBar current={card.currentUtilization} projected={card.projectedUtilization} />
+        <UtilizationBar
+          current={card.currentUtilization}
+          projected={card.projectedUtilization}
+        />
       </div>
 
       <div className="space-y-2.5">
@@ -48,12 +64,23 @@ export function CardRow({ card, onClick, showElimination = false }: CardRowProps
           <PaymentRecommendation
             payment={card.paymentBeforeStatement}
             label="Before statement close"
+            showMarkPaid={true}
+            onMarkPaid={
+              onMarkPaid
+                ? () => onMarkPaid(card.paymentBeforeStatement?.amount ?? 0)
+                : undefined
+            }
           />
         )}
         <PaymentRecommendation
           payment={card.paymentByDueDate}
           label="By due date"
           showMarkPaid={true}
+          onMarkPaid={
+            onMarkPaid
+              ? () => onMarkPaid(card.paymentByDueDate.amount)
+              : undefined
+          }
         />
       </div>
 
@@ -64,7 +91,10 @@ export function CardRow({ card, onClick, showElimination = false }: CardRowProps
             {willEliminate ? (
               <>🎯 Pays off this card!</>
             ) : (
-              <>🎯 ${Math.ceil(remainingToPayoff).toLocaleString()} more pays off this card!</>
+              <>
+                🎯 ${Math.ceil(remainingToPayoff).toLocaleString()} more pays
+                off this card!
+              </>
             )}
           </p>
         </div>
