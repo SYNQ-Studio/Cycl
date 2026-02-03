@@ -21,3 +21,6 @@ export {
   type ConstraintSuggestion,
   type ConstraintSuggestionKind,
 } from "./errors";
+export { allocatePayments } from "./allocator";
+export { generatePlan, type GeneratePlanOptions } from "./plan";
+export type { PlanSnapshot, PlanAction } from "@ccpp/shared";
