@@ -3,6 +3,7 @@ const tsParser = require("@typescript-eslint/parser");
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
+  recommendedConfig: require("eslint/conf/eslint-recommended"),
 });
 
 module.exports = [

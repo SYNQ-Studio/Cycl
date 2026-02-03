@@ -16,6 +16,35 @@
 **Exact changes:**
 - Updated workflow jobs to use `runs-on: blacksmith-2vcpu-ubuntu-2404`.
 
+## 2026-02-03 — Mobile TypeScript uses bundler module resolution
+
+**Reason:** Expo's base tsconfig uses `customConditions`, which requires `moduleResolution` set to `bundler`, `node16`, or `nodenext`. CI typecheck failed with TS5098 under `node` resolution.
+
+**Exact changes:**
+- Set `apps/mobile/tsconfig.json` `compilerOptions.moduleResolution` to `bundler`.
+
+## 2026-02-03 — Web ESLint FlatCompat includes recommended config
+
+**Reason:** CI lint failed with `Missing parameter 'recommendedConfig' in FlatCompat constructor` due to `@eslint/eslintrc@3` requiring `recommendedConfig`.
+
+**Exact changes:**
+- Added `recommendedConfig: require("eslint/conf/eslint-recommended")` to `apps/web/eslint.config.js`.
+
+## 2026-02-03 — Shared package coverage ignores config files
+
+**Reason:** CI coverage failed due to config files being counted in coverage, which are not part of runtime source and skew branch thresholds.
+
+**Exact changes:**
+- Excluded `**/*.config.ts` from `packages/shared/vitest.config.ts` coverage.
+
+## 2026-02-03 — API imports Drizzle from shared to avoid type duplication
+
+**Reason:** `drizzle-orm` has many peer dependencies, and pnpm installs multiple copies with different peer sets across workspaces (web/mobile/api). Mixing table definitions from one copy with query helpers from another caused TypeScript errors about incompatible `PgTable` and `SQL` types.
+
+**Exact changes:**
+- Added `packages/shared/src/drizzle.ts` re-exporting Drizzle modules.
+- Updated API imports to use `@ccpp/shared/drizzle` so tables and helpers come from the same Drizzle instance.
+
 ## 2026-02-03 — Clerk (auth) + Supabase (DB); single user ID
 
 **Clerk** is the only identity provider. **Supabase** is the database (Postgres). They are separate; there is no Supabase Auth.

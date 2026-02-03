@@ -15,6 +15,7 @@ export default defineConfig({
         "**/*.test.ts",
         "**/*.spec.ts",
         "**/index.ts",
+        "**/*.config.ts",
       ],
       thresholds: {
         branches: 70,

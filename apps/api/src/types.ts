@@ -1,4 +1,4 @@
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { PostgresJsDatabase } from "@ccpp/shared/drizzle";
 import type * as schema from "@ccpp/shared/schema";
 
 export type Database = PostgresJsDatabase<typeof schema>;

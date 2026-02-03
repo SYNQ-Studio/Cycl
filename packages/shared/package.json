@@ -6,7 +6,8 @@
     ".": "./index.ts",
     "./ai": "./ai.ts",
     "./schema": "./src/schema/index.ts",
-    "./mobile": "./src/mobile.ts"
+    "./mobile": "./src/mobile.ts",
+    "./drizzle": "./src/drizzle.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.31.1",

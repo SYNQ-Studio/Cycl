@@ -1,5 +1,5 @@
 import { Hono, type Context } from "hono";
-import { and, eq } from "drizzle-orm";
+import { and, eq } from "@ccpp/shared/drizzle";
 import { cards as cardsTable } from "@ccpp/shared/schema";
 import type { Strategy } from "@ccpp/solver";
 import type { AppEnv, WithRls } from "../types.js";

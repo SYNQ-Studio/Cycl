@@ -1,6 +1,5 @@
 import postgres from "postgres";
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { sql } from "drizzle-orm";
+import { drizzle, sql, type PostgresJsDatabase } from "@ccpp/shared/drizzle";
 import * as schema from "@ccpp/shared/schema";
 import { env } from "./env.js";
 

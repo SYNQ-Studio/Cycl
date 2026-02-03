@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq } from "@ccpp/shared/drizzle";
 import {
   cards as cardsTable,
   plans as plansTable,

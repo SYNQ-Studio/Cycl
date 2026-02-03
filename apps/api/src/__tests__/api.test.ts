@@ -33,7 +33,7 @@ const mocks = vi.hoisted(() => ({
 
 let mockState: DbState;
 
-vi.mock("drizzle-orm", () => {
+vi.mock("@ccpp/shared/drizzle", () => {
   const sql = Object.assign(
     (strings: TemplateStringsArray, ...values: unknown[]) => ({
       op: "sql",
