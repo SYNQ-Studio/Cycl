@@ -8,9 +8,9 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage --passWithNoTests"
+    "test": "pnpm exec vitest run --passWithNoTests",
+    "test:watch": "pnpm exec vitest",
+    "test:coverage": "pnpm exec vitest run --coverage --passWithNoTests"
   },
   "dependencies": {
     "@ccpp/shared": "workspace:*",

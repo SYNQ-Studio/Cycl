@@ -1,11 +1,12 @@
 # PLANS.md
 
 ## Document Metadata
+
 - Title: Execution Plan
 - Status: Active
 - Owner: TBD
-- Last updated: 2026-02-02
-- Current phase: Phase 0
+- Last updated: 2026-02-03
+- Current phase: Phase 2
 
 # Credit Card Payment Planner
 
@@ -103,10 +104,81 @@ README.md
 
 ### Phase 2: API
 
-- GET /plan/current
+- GET /plan/current (returns selected strategy; auto-generates when no plan exists using stored preferences)
 - GET /cards
-- POST /overrides
+- POST /overrides (updates card fields; triggers immediate plan recomputation)
+- POST /plan/actions/:actionId/mark-paid (updates card balances + regenerates plan)
 - Zod validation
+
+---
+
+## Phase 2 Execution Plan (API Functionality)
+
+### Assumptions / Decisions (2026-02-03)
+
+1. **POST /overrides updates card fields** (balances, APR, limits, dates, minimums, exclusion flag).
+2. **GET /plan/current** returns the selected strategy and **auto-generates** if no plan exists using stored user preferences.
+3. **Overrides trigger immediate plan recomputation** and persist the new plan snapshot.
+4. **Mark paid** updates card balances and regenerates the plan in the same request.
+
+### Agent Roles
+
+- **Spec-1**: API contract decisions + docs updates.
+- **Data-1**: Database + schema + migration changes.
+- **API-1**: Plan endpoints (`/plan/current`, mark-paid changes).
+- **API-2**: Overrides endpoint and recompute wiring.
+- **Contracts-1**: Zod schemas + shared conversion updates.
+- **QA-1**: Tests + typecheck/build fixes for api package.
+
+### Parallel Ticket Breakdown
+
+**T2-01 — Contracts & Preferences**
+
+- Define stored preferences source for strategy and available cash (location + schema).
+- Specify GET `/plan/current` response shape (include `strategy`, `availableCashCents`, `totalPaymentCents`, `snapshot`).
+- Decide 404 vs. auto-generate behavior (auto-generate per decision).
+- Update API error codes and docs.
+
+**T2-02 — Overrides Data Model**
+
+- Implement override persistence as **card field updates** (no separate overrides table).
+- Ensure edited/overridden fields remain authoritative.
+- Add DB migration if new preference storage is required.
+- Update RLS policies if new tables are introduced.
+
+**T2-03 — GET /plan/current**
+
+- Fetch latest plan for user; if missing, pull stored preferences and generate plan.
+- Persist generated plan and return response with selected strategy.
+- Return `PlanSnapshot` with `markedPaidAt` fields where present.
+- Add timeout/error mapping similar to `/plan/generate`.
+
+**T2-04 — POST /overrides**
+
+- Validate request body (card fields only).
+- Apply updates to `cards` table.
+- Recompute plan immediately using stored preferences.
+- Persist and return updated plan snapshot.
+
+**T2-05 — Mark Paid + Recompute**
+
+- Update mark-paid handler to:
+  - Apply `markedPaidAt` in snapshot.
+  - Reduce `currentBalanceCents` for the action’s card.
+  - Re-run solver using stored preferences.
+  - Persist and return the new plan snapshot.
+
+**T2-06 — Schemas + Conversions**
+
+- Add Zod schemas for overrides payload/response and plan/current response.
+- Ensure API output aligns with `PlanSnapshot` + `markedPaidAt`.
+- Update shared conversions if needed for preference-backed plan generation.
+
+**T2-07 — Tests + Tooling**
+
+- Add tests for plan/current auto-generate, overrides recompute, mark-paid balance update.
+- Fix `apps/api` typecheck/build issues (zod resolution, drizzle duplicate types).
+- Ensure `pnpm -r test`, `pnpm -r typecheck`, `pnpm -r build` pass.
 
 ### Phase 3: Mobile MVP
 

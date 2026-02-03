@@ -1,18 +1,17 @@
 import { Hono, type Context } from "hono";
+import { and, eq } from "drizzle-orm";
+import { cards as cardsTable } from "@ccpp/shared/schema";
 import type { Strategy } from "@ccpp/solver";
 import type { AppEnv, WithRls } from "../types.js";
 import { AppError, ERROR_CODES } from "../errors.js";
 import { validateJson } from "../middleware/validate.js";
 import {
-  generatePlanRequestSchema,
-  type GeneratePlanRequest,
-} from "../schemas/plans.js";
+  overridesRequestSchema,
+  type OverridesRequest,
+} from "../schemas/overrides.js";
 import {
-  fetchLatestPlan,
-  formatPlanResponse,
   generateAndPersistPlan,
   loadPlanPreferences,
-  upsertPlanPreferences,
 } from "../services/plan.js";
 
 const router = new Hono<AppEnv>();
@@ -41,40 +40,31 @@ function requireWithRls(c: Context<AppEnv>): WithRls {
   return withRls;
 }
 
-router.post(
-  "/plan/generate",
-  validateJson(generatePlanRequestSchema),
-  async (c) => {
-    const userId = requireUserId(c);
-    const withRls = requireWithRls(c);
-    const { availableCashCents, strategy } =
-      c.get("validatedBody") as GeneratePlanRequest;
-
-    const response = await withRls(async (tx) => {
-      await upsertPlanPreferences(tx, {
-        userId,
-        strategy,
-        availableCashCents,
-      });
-      return generateAndPersistPlan(tx, {
-        userId,
-        strategy,
-        availableCashCents,
-      });
-    });
-
-    return c.json(response);
-  }
-);
-
-router.get("/plan/current", async (c) => {
+router.post("/overrides", validateJson(overridesRequestSchema), async (c) => {
   const userId = requireUserId(c);
   const withRls = requireWithRls(c);
+  const { cardId, updates } = c.get("validatedBody") as OverridesRequest;
 
   const response = await withRls(async (tx) => {
-    const latestPlan = await fetchLatestPlan(tx, userId);
-    if (latestPlan) {
-      return formatPlanResponse(latestPlan);
+    const payload = {
+      ...updates,
+      issuer:
+        updates.issuer === undefined ? undefined : (updates.issuer ?? null),
+      updatedAt: new Date(),
+    };
+
+    const [updated] = await tx
+      .update(cardsTable)
+      .set(payload)
+      .where(and(eq(cardsTable.id, cardId), eq(cardsTable.userId, userId)))
+      .returning();
+
+    if (!updated) {
+      throw new AppError({
+        status: 404,
+        code: ERROR_CODES.NOT_FOUND,
+        message: "Card not found.",
+      });
     }
 
     const preferences = await loadPlanPreferences(tx, userId);

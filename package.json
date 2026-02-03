@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev:web": "pnpm --filter @ccpp/web dev",
     "build:web": "pnpm --filter @ccpp/web build",
@@ -20,6 +23,11 @@
     "ignoredBuiltDependencies": [
       "@swc/core",
       "esbuild"
-    ]
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "19.2.0"
+      }
+    }
   }
 }

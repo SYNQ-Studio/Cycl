@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { testClient } from "hono/testing";
-import type { Card, Plan } from "@ccpp/shared/schema";
-import { cards as cardsTable, plans as plansTable } from "@ccpp/shared/schema";
+import type { Card, Plan, PlanPreferences } from "@ccpp/shared/schema";
+import {
+  cards as cardsTable,
+  plans as plansTable,
+  planPreferences as planPreferencesTable,
+} from "@ccpp/shared/schema";
 import type { PlanSnapshot } from "@ccpp/shared";
 import { ConstraintViolationError } from "@ccpp/solver";
 import { ERROR_CODES } from "../errors.js";
@@ -10,6 +14,7 @@ import { app } from "../index.js";
 type DbState = {
   cards: Card[];
   plans: Plan[];
+  preferences: PlanPreferences[];
 };
 
 type Condition =
@@ -55,6 +60,7 @@ function columnKey(column: unknown): keyof Card | keyof Plan | null {
   if (column === plansTable.id) return "id";
   if (column === plansTable.userId) return "userId";
   if (column === plansTable.generatedAt) return "generatedAt";
+  if (column === planPreferencesTable.userId) return "userId";
   return null;
 }
 
@@ -132,7 +138,11 @@ function createTx(state: DbState, userId: string) {
           let order: Condition;
           let limitValue: number | undefined;
 
-          const data = () => (table === cardsTable ? state.cards : state.plans);
+          const data = () => {
+            if (table === cardsTable) return state.cards;
+            if (table === plansTable) return state.plans;
+            return state.preferences;
+          };
 
           const query = {
             where(nextCondition: Condition) {
@@ -164,9 +174,14 @@ function createTx(state: DbState, userId: string) {
     },
     insert(table: unknown) {
       let values: Record<string, any> | Record<string, any>[] | undefined;
+      let conflictUpdate: { set: Record<string, any> } | null = null;
       const query = {
         values(nextValues: Record<string, any> | Record<string, any>[]) {
           values = nextValues;
+          return query;
+        },
+        onConflictDoUpdate(config: { set: Record<string, any> }) {
+          conflictUpdate = config;
           return query;
         },
         returning() {
@@ -200,10 +215,34 @@ function createTx(state: DbState, userId: string) {
             return base;
           });
 
+          if (table === planPreferencesTable && conflictUpdate) {
+            const results: PlanPreferences[] = [];
+            inserted.forEach((entry) => {
+              const userId = entry.userId;
+              const index = state.preferences.findIndex(
+                (pref) => pref.userId === userId
+              );
+              if (index >= 0) {
+                const updated = {
+                  ...state.preferences[index],
+                  ...conflictUpdate.set,
+                } as PlanPreferences;
+                state.preferences[index] = updated;
+                results.push(updated);
+              } else {
+                state.preferences.push(entry as PlanPreferences);
+                results.push(entry as PlanPreferences);
+              }
+            });
+            return Promise.resolve(results).then(resolve, reject);
+          }
+
           if (table === cardsTable) {
             state.cards.push(...(inserted as Card[]));
-          } else {
+          } else if (table === plansTable) {
             state.plans.push(...(inserted as Plan[]));
+          } else {
+            state.preferences.push(...(inserted as PlanPreferences[]));
           }
 
           return Promise.resolve(inserted).then(resolve, reject);
@@ -227,8 +266,13 @@ function createTx(state: DbState, userId: string) {
           return query;
         },
         then(resolve: (value: any) => any, reject: (err: any) => any) {
-          const data = table === cardsTable ? state.cards : state.plans;
-          const updated: Array<Card | Plan> = [];
+          const data =
+            table === cardsTable
+              ? state.cards
+              : table === plansTable
+              ? state.plans
+              : state.preferences;
+          const updated: Array<Card | Plan | PlanPreferences> = [];
 
           data.forEach((item, index) => {
             if (item.userId !== userId) return;
@@ -254,9 +298,14 @@ function createTx(state: DbState, userId: string) {
           return query;
         },
         then(resolve: (value: any) => any, reject: (err: any) => any) {
-          const data = table === cardsTable ? state.cards : state.plans;
-          const remaining: Array<Card | Plan> = [];
-          const deleted: Array<Card | Plan> = [];
+          const data =
+            table === cardsTable
+              ? state.cards
+              : table === plansTable
+              ? state.plans
+              : state.preferences;
+          const remaining: Array<Card | Plan | PlanPreferences> = [];
+          const deleted: Array<Card | Plan | PlanPreferences> = [];
 
           data.forEach((item) => {
             if (item.userId !== userId || !matchCondition(item, condition)) {
@@ -268,8 +317,10 @@ function createTx(state: DbState, userId: string) {
 
           if (table === cardsTable) {
             state.cards = remaining as Card[];
-          } else {
+          } else if (table === plansTable) {
             state.plans = remaining as Plan[];
+          } else {
+            state.preferences = remaining as PlanPreferences[];
           }
 
           return Promise.resolve(deleted).then(resolve, reject);
@@ -369,8 +420,21 @@ function makePlan(overrides: Partial<Plan> = {}): Plan {
   };
 }
 
+function makePreferences(
+  overrides: Partial<PlanPreferences> = {}
+): PlanPreferences {
+  const now = new Date("2024-01-01T00:00:00Z");
+  return {
+    userId: overrides.userId ?? "user-a",
+    strategy: overrides.strategy ?? "snowball",
+    availableCashCents: overrides.availableCashCents ?? 200_00,
+    createdAt: overrides.createdAt ?? now,
+    updatedAt: overrides.updatedAt ?? now,
+  };
+}
+
 beforeEach(() => {
-  mockState = { cards: [], plans: [] };
+  mockState = { cards: [], plans: [], preferences: [] };
   mocks.mockVerifyToken.mockReset();
   mocks.mockGeneratePlan.mockReset();
   mocks.mockVerifyToken.mockImplementation(async (token: string) => {
@@ -452,7 +516,10 @@ describe("cards", () => {
   });
 
   it("updates a card for the authenticated user", async () => {
-    const card = makeCard({ id: "card-update", userId: "user-a" });
+    const card = makeCard({
+      id: "11111111-1111-1111-1111-111111111111",
+      userId: "user-a",
+    });
     mockState.cards.push(card);
 
     const res = await client.api.cards[":id"].$patch({
@@ -468,7 +535,10 @@ describe("cards", () => {
   });
 
   it("prevents updating another user's card", async () => {
-    const otherCard = makeCard({ id: "other-card", userId: "user-b" });
+    const otherCard = makeCard({
+      id: "22222222-2222-2222-2222-222222222222",
+      userId: "user-b",
+    });
     mockState.cards.push(otherCard);
 
     const res = await client.api.cards[":id"].$patch({
@@ -483,7 +553,10 @@ describe("cards", () => {
   });
 
   it("deletes a card for the authenticated user", async () => {
-    const card = makeCard({ id: "card-delete", userId: "user-a" });
+    const card = makeCard({
+      id: "33333333-3333-3333-3333-333333333333",
+      userId: "user-a",
+    });
     mockState.cards.push(card);
 
     const res = await client.api.cards[":id"].$delete({
@@ -513,6 +586,33 @@ describe("cards", () => {
   });
 });
 
+describe("overrides", () => {
+  it("updates card fields and recomputes the plan", async () => {
+    const card = makeCard({
+      id: "44444444-4444-4444-4444-444444444444",
+      userId: "user-a",
+    });
+    mockState.cards.push(card);
+    mockState.preferences.push(
+      makePreferences({ strategy: "snowball", availableCashCents: 180_00 })
+    );
+
+    const snapshot = makeSnapshot({ planId: "plan-after-override" });
+    mocks.mockGeneratePlan.mockResolvedValue(snapshot);
+
+    const res = await client.api.overrides.$post({
+      json: { cardId: card.id, updates: { aprBps: 1799 } },
+      header: authHeader("user-a"),
+    });
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.plan.planId).toBe("plan-after-override");
+    expect(mockState.cards[0]?.aprBps).toBe(1799);
+    expect(mocks.mockGeneratePlan).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe("plans", () => {
   it("generates a plan using active cards", async () => {
     mockState.cards.push(
@@ -530,7 +630,9 @@ describe("plans", () => {
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.planId).toBe("plan-123");
+    expect(body.plan.planId).toBe("plan-123");
+    expect(body.strategy).toBe("snowball");
+    expect(body.availableCashCents).toBe(200_00);
     expect(mocks.mockGeneratePlan).toHaveBeenCalledTimes(1);
     const [cardsArg, cashArg, strategyArg] =
       mocks.mockGeneratePlan.mock.calls[0] ?? [];
@@ -579,6 +681,40 @@ describe("plans", () => {
     const body = await res.json();
     expect(body.error.code).toBe(ERROR_CODES.SOLVER_ERROR);
   });
+
+  it("returns the latest plan for plan/current", async () => {
+    const plan = makePlan({ id: "plan-latest", strategy: "avalanche" });
+    mockState.plans.push(plan);
+
+    const res = await client.api.plan.current.$get({
+      header: authHeader("user-a"),
+    });
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.plan.planId).toBe("plan-latest");
+    expect(body.strategy).toBe("avalanche");
+  });
+
+  it("auto-generates plan/current using stored preferences", async () => {
+    mockState.cards.push(makeCard({ id: "card-1" }));
+    mockState.preferences.push(
+      makePreferences({ strategy: "utilization", availableCashCents: 150_00 })
+    );
+
+    const snapshot = makeSnapshot({ planId: "plan-auto" });
+    mocks.mockGeneratePlan.mockResolvedValue(snapshot);
+
+    const res = await client.api.plan.current.$get({
+      header: authHeader("user-a"),
+    });
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.plan.planId).toBe("plan-auto");
+    expect(body.strategy).toBe("utilization");
+    expect(body.availableCashCents).toBe(150_00);
+  });
 });
 
 describe("actions", () => {
@@ -600,6 +736,12 @@ describe("actions", () => {
       }),
     });
     mockState.plans.push(plan);
+    mockState.cards.push(
+      makeCard({ id: "card-1", currentBalanceCents: 100_00 })
+    );
+
+    const snapshot = makeSnapshot({ planId: "plan-after-paid" });
+    mocks.mockGeneratePlan.mockResolvedValue(snapshot);
 
     const res = await client.api.plan.actions[":actionId"]["mark-paid"].$post({
       param: { actionId: "0" },
@@ -608,7 +750,9 @@ describe("actions", () => {
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.actions[0].markedPaidAt).toBeDefined();
+    expect(body.plan.planId).toBe("plan-after-paid");
+    expect(mockState.cards[0]?.currentBalanceCents).toBe(50_00);
+    expect(mockState.plans).toHaveLength(2);
   });
 
   it("returns not found when the action index is invalid", async () => {

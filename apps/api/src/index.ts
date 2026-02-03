@@ -4,16 +4,17 @@ import { logger } from "hono/logger";
 import { serve } from "@hono/node-server";
 import type { AppEnv } from "./types.js";
 import { env } from "./env.js";
-import { errorMiddleware, notFoundHandler } from "./middleware/error.js";
+import { handleError, notFoundHandler } from "./middleware/error.js";
 import { dbMiddleware } from "./middleware/db.js";
 import { authMiddleware } from "./middleware/auth.js";
 import cardsRoutes from "./routes/cards.js";
 import plansRoutes from "./routes/plans.js";
 import actionsRoutes from "./routes/actions.js";
+import overridesRoutes from "./routes/overrides.js";
 
 const app = new Hono<AppEnv>();
 
-app.use("*", errorMiddleware);
+app.onError(handleError);
 app.use("*", logger());
 app.use(
   "*",
@@ -34,6 +35,7 @@ app.use("/api/*", authMiddleware);
 app.route("/api", cardsRoutes);
 app.route("/api", plansRoutes);
 app.route("/api", actionsRoutes);
+app.route("/api", overridesRoutes);
 
 app.notFound(notFoundHandler);
 

@@ -5,7 +5,7 @@ import { AppError, ERROR_CODES } from "../errors.js";
 
 type ValidationDetails = {
   formErrors: string[];
-  fieldErrors: Record<string, string[]>;
+  fieldErrors: Record<string, string[] | undefined>;
   issues: Array<{ path: string; message: string; code: string }>;
 };
 
