@@ -11,6 +11,22 @@
 
 See `docs/context/SUPABASE-CLERK.md` for setup and mapping details.
 
+## 2026-02-03 — Mobile MVP uses local SQLite persistence
+
+- **Local-only MVP**: Cards, plan snapshots, and plan preferences are stored in SQLite on-device to support offline use.
+- **Manual overrides**: Editing a card directly updates the stored record (no separate overrides table in MVP).
+
+## 2026-02-03 — Solver hash is pure JS for mobile compatibility
+
+- **Reason**: The deterministic plan ID hash must work in React Native without Node crypto.
+- **Behavior**: Same inputs + same reference date still produce a stable 32-character hex plan ID.
+
+## 2026-02-03 — Dependency policy and development standards
+
+- **Policy**: Prefer the latest stable versions of dependencies unless blocked by documented compatibility constraints.
+- **Deprecated tooling**: Avoid deprecated APIs, commands, and workflows; follow current Expo/RN best practices.
+- **Agent discipline**: Agents must think through root causes and update documentation when adding fixes.
+
 ## 2026-02-02 — MVP excludes Plaid
 
 Reason: validate planning logic before external dependencies.

@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Credit Card Payment Planner",
+    "slug": "credit-card-payment-planner",
+    "owner": "synqstudio",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.twosix_ltd.creditcardpaymentplanner"
+    },
+    "ios": {
+      "bundleIdentifier": "com.twosix-ltd.creditcardpaymentplanner"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "604aeaea-48c1-4944-b6a1-257067a95ab0"
+      }
+    }
+  }
+}

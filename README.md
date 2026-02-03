@@ -4,7 +4,7 @@ This repo is in Phase 0 scaffolding. The initial UI generated from Figma Make is
 
 ## Requirements
 
-- **Node.js >= 20** (required by CI, web/api tooling, and the Expo mobile app). Use `nvm use` or `fnm use` in the repo root (`.nvmrc` is set to 20). On Node 18, the mobile app will fail with `TypeError: configs.toReversed is not a function` and npm will show EBADENGINE warnings.
+- **Node.js >= 18** (engines.node allows 18+ so pnpm works in new terminals). **Node 20 is recommended** for the Expo mobile app: on Node 18, `expo run:ios` can fail with `TypeError: configs.toReversed is not a function`. Use `nvm use` or `fnm use` in the repo root when running the mobile app (`.nvmrc` is set to 20).
 
 ## Repo Layout
 
@@ -20,3 +20,13 @@ This repo is in Phase 0 scaffolding. The initial UI generated from Figma Make is
 
 1. Install dependencies: `pnpm install`
 2. Start dev server: `pnpm dev:web`
+
+## Running the mobile app
+
+1. Install dependencies: `pnpm install`
+2. Start Expo dev server: `pnpm --filter @ccpp/mobile start`
+3. Prebuild (native scaffolding): `pnpm --filter @ccpp/mobile build`
+
+## Mobile development notes
+
+See `docs/context/DEV_NOTES.md` for known setup fixes (monorepo entrypoint, Metro resolution, iOS scripts with spaces, SQLite API changes).

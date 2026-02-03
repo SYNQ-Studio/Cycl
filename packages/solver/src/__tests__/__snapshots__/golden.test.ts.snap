@@ -226,7 +226,7 @@ exports[`golden plan snapshots > generates correct plan for complex scenario (ut
     ],
     "targetDate": "2026-01-10",
   },
-  "planId": "507c2a749a9ae3f0055f367307cbbd17",
+  "planId": "92658a1695de8d4bf445b25d37ff9af8",
   "portfolio": {
     "confidence": "high",
     "utilization": 0.4266666666666667,
@@ -321,7 +321,7 @@ exports[`golden plan snapshots > generates correct plan for typical scenario (sn
     ],
     "targetDate": "2026-02-05",
   },
-  "planId": "e19551179733d39fe506d16fac3c8bc7",
+  "planId": "c6012c1e3f69cb9f80e9a4352e102e29",
   "portfolio": {
     "confidence": "high",
     "utilization": 0.25,

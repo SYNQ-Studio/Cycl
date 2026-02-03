@@ -5,7 +5,8 @@
   "exports": {
     ".": "./index.ts",
     "./ai": "./ai.ts",
-    "./schema": "./src/schema/index.ts"
+    "./schema": "./src/schema/index.ts",
+    "./mobile": "./src/mobile.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.31.1",
