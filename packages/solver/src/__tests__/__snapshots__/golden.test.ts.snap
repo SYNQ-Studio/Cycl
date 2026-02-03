@@ -1,0 +1,330 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`golden plan snapshots > generates correct plan for complex scenario (utilization) 1`] = `
+{
+  "actions": [
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 820,
+      "cardId": "card-1",
+      "cardName": "Card 1",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-06",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 840,
+      "cardId": "card-2",
+      "cardName": "Card 2",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-07",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 860,
+      "cardId": "card-3",
+      "cardName": "Card 3",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-08",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 880,
+      "cardId": "card-4",
+      "cardName": "Card 4",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-09",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 900,
+      "cardId": "card-5",
+      "cardName": "Card 5",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-10",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 920,
+      "cardId": "card-6",
+      "cardName": "Card 6",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-11",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 940,
+      "cardId": "card-7",
+      "cardName": "Card 7",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-12",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 960,
+      "cardId": "card-8",
+      "cardName": "Card 8",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-13",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 980,
+      "cardId": "card-9",
+      "cardName": "Card 9",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-14",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1000,
+      "cardId": "card-10",
+      "cardName": "Card 10",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-15",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1020,
+      "cardId": "card-11",
+      "cardName": "Card 11",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-16",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1040,
+      "cardId": "card-12",
+      "cardName": "Card 12",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-17",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1060,
+      "cardId": "card-13",
+      "cardName": "Card 13",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-18",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1080,
+      "cardId": "card-14",
+      "cardName": "Card 14",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-19",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 1100,
+      "cardId": "card-15",
+      "cardName": "Card 15",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-20",
+    },
+    {
+      "actionType": "BEFORE_STATEMENT_CLOSE",
+      "amountCents": 28900,
+      "cardId": "card-15",
+      "cardName": "Card 15",
+      "priority": 0.9,
+      "reason": "Reduces utilization below 30% before reporting",
+      "reasonTags": [
+        "utilization_reporting",
+      ],
+      "targetDate": "2026-01-10",
+    },
+    {
+      "actionType": "BEFORE_STATEMENT_CLOSE",
+      "amountCents": 6700,
+      "cardId": "card-14",
+      "cardName": "Card 14",
+      "priority": 0.9,
+      "reason": "Reduces utilization below 30% before reporting",
+      "reasonTags": [
+        "utilization_reporting",
+      ],
+      "targetDate": "2026-01-24",
+    },
+  ],
+  "cycleLabel": "This Cycle",
+  "focusSummary": [
+    "Pay minimums on 15 cards.",
+    "2 pre-statement payments to lower utilization.",
+  ],
+  "generatedAt": "2026-01-15T00:00:00.000Z",
+  "nextAction": {
+    "actionType": "BEFORE_STATEMENT_CLOSE",
+    "amountCents": 28900,
+    "cardId": "card-15",
+    "cardName": "Card 15",
+    "priority": 0.9,
+    "reason": "Reduces utilization below 30% before reporting",
+    "reasonTags": [
+      "utilization_reporting",
+    ],
+    "targetDate": "2026-01-10",
+  },
+  "planId": "507c2a749a9ae3f0055f367307cbbd17",
+  "portfolio": {
+    "confidence": "high",
+    "utilization": 0.4266666666666667,
+  },
+}
+`;
+
+exports[`golden plan snapshots > generates correct plan for typical scenario (snowball) 1`] = `
+{
+  "actions": [
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 5000,
+      "cardId": "card-low",
+      "cardName": "Low Balance",
+      "priority": 0.5,
+      "reason": "Extra toward balance (snowball — smallest balance first)",
+      "reasonTags": [
+        "minimum_payment",
+        "stability",
+      ],
+      "targetDate": "2026-02-05",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 3000,
+      "cardId": "card-high",
+      "cardName": "High Balance",
+      "priority": 0.5,
+      "reason": "Minimum payment to avoid late fees",
+      "reasonTags": [
+        "minimum_payment",
+      ],
+      "targetDate": "2026-02-11",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 40000,
+      "cardId": "card-apr",
+      "cardName": "High APR",
+      "priority": 0.5,
+      "reason": "Extra toward balance (snowball — smallest balance first)",
+      "reasonTags": [
+        "minimum_payment",
+        "stability",
+      ],
+      "targetDate": "2026-02-09",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 42000,
+      "cardId": "card-util-high",
+      "cardName": "High Util",
+      "priority": 0.5,
+      "reason": "Extra toward balance (snowball — smallest balance first)",
+      "reasonTags": [
+        "minimum_payment",
+        "stability",
+      ],
+      "targetDate": "2026-02-12",
+    },
+    {
+      "actionType": "BY_DUE_DATE",
+      "amountCents": 10000,
+      "cardId": "card-util-low",
+      "cardName": "Low Util",
+      "priority": 0.5,
+      "reason": "Extra toward balance (snowball — smallest balance first)",
+      "reasonTags": [
+        "minimum_payment",
+        "stability",
+      ],
+      "targetDate": "2026-02-08",
+    },
+  ],
+  "cycleLabel": "This Cycle",
+  "focusSummary": [
+    "Pay minimums on 5 cards.",
+    "Extra to Low Balance (snowball (smallest balance)).",
+  ],
+  "generatedAt": "2026-01-15T00:00:00.000Z",
+  "nextAction": {
+    "actionType": "BY_DUE_DATE",
+    "amountCents": 5000,
+    "cardId": "card-low",
+    "cardName": "Low Balance",
+    "priority": 0.5,
+    "reason": "Extra toward balance (snowball — smallest balance first)",
+    "reasonTags": [
+      "minimum_payment",
+      "stability",
+    ],
+    "targetDate": "2026-02-05",
+  },
+  "planId": "e19551179733d39fe506d16fac3c8bc7",
+  "portfolio": {
+    "confidence": "high",
+    "utilization": 0.25,
+  },
+}
+`;

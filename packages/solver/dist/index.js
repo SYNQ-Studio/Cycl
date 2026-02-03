@@ -6,4 +6,4 @@ export { calculateUtilization, sortCardsByStrategy, getNextStatementCloseDate, g
 export { validateConstraints } from "./validation";
 export { ConstraintViolationError, CONSTRAINT_VIOLATION_CODE, } from "./errors";
 export { allocatePayments } from "./allocator";
-export { generatePlan, } from "./plan";
+export { generatePlan } from "./plan";

@@ -1,0 +1,52 @@
+import { z } from "zod";
+export declare const createCardSchema: any;
+export declare const updateCardSchema: any;
+export declare const cardIdParamsSchema: any;
+export declare const cardResponseSchema: import("zod").ZodObject<{
+    id: import("zod").ZodString;
+    userId: import("zod").ZodString;
+    name: import("zod").ZodString;
+    issuer: import("zod").ZodNullable<import("zod").ZodString>;
+    creditLimitCents: import("zod").ZodNumber;
+    currentBalanceCents: import("zod").ZodNumber;
+    minimumPaymentCents: import("zod").ZodNumber;
+    aprBps: import("zod").ZodNumber;
+    statementCloseDay: import("zod").ZodNumber;
+    dueDateDay: import("zod").ZodNumber;
+    excludeFromOptimization: import("zod").ZodBoolean;
+    createdAt: import("zod").ZodDate;
+    updatedAt: import("zod").ZodDate;
+}, import("zod").UnknownKeysParam, import("zod").ZodTypeAny, {
+    id: string;
+    name: string;
+    userId: string;
+    issuer: string | null;
+    creditLimitCents: number;
+    currentBalanceCents: number;
+    minimumPaymentCents: number;
+    aprBps: number;
+    statementCloseDay: number;
+    dueDateDay: number;
+    excludeFromOptimization: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}, {
+    id: string;
+    name: string;
+    userId: string;
+    issuer: string | null;
+    creditLimitCents: number;
+    currentBalanceCents: number;
+    minimumPaymentCents: number;
+    aprBps: number;
+    statementCloseDay: number;
+    dueDateDay: number;
+    excludeFromOptimization: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}>;
+export declare const cardsResponseSchema: any;
+export type CreateCardInput = z.infer<typeof createCardSchema>;
+export type UpdateCardInput = z.infer<typeof updateCardSchema>;
+export type CardIdParams = z.infer<typeof cardIdParamsSchema>;
+//# sourceMappingURL=cards.d.ts.map

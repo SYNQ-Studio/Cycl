@@ -6,9 +6,15 @@
   "scripts": {
     "dev:web": "pnpm --filter @ccpp/web dev",
     "build:web": "pnpm --filter @ccpp/web build",
-    "lint": "pnpm --filter @ccpp/web lint",
-    "typecheck": "pnpm --filter @ccpp/web typecheck",
-    "test": "pnpm --filter @ccpp/web test"
+    "lint:web": "pnpm --filter @ccpp/web lint",
+    "typecheck:web": "pnpm --filter @ccpp/web typecheck",
+    "test:web": "pnpm --filter @ccpp/web test",
+    "lint": "pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "build": "pnpm -r --if-present build",
+    "test:all": "pnpm -r --if-present test",
+    "test:coverage": "pnpm -r --if-present test:coverage",
+    "test": "pnpm test:all"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [

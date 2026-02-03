@@ -3,7 +3,6 @@ import path from "node:path";
 
 export default defineConfig({
   test: {
-    glob: ["**/*.{test,spec}.{ts,tsx}"],
     environment: "node",
     include: ["**/*.{test,spec}.{ts,tsx}"],
     coverage: {
@@ -17,6 +16,12 @@ export default defineConfig({
         "**/*.spec.ts",
         "**/index.ts",
       ],
+      thresholds: {
+        branches: 70,
+        functions: 70,
+        lines: 70,
+        statements: 70,
+      },
     },
   },
   resolve: {
