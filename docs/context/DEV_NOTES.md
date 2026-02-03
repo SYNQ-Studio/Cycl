@@ -42,3 +42,15 @@ These notes document the fixes required to get the Expo prebuild app running on 
 3. `cd apps/mobile/ios && pod install`
 4. `pnpm --filter @ccpp/mobile exec expo start -c`
 5. `pnpm --filter @ccpp/mobile exec expo run:ios`
+
+### Android Setup (macOS)
+
+1. Install Java 17 (required by Gradle):
+   - `brew install --cask temurin@17`
+   - `export JAVA_HOME=$(/usr/libexec/java_home -v 17)`
+2. Configure Android SDK path:
+   - Add `ANDROID_HOME=$HOME/Library/Android/sdk`
+   - Or create `apps/mobile/android/local.properties` with:
+     - `sdk.dir=/Users/<you>/Library/Android/sdk`
+3. Run:
+   - `pnpm --filter @ccpp/mobile exec expo run:android`
